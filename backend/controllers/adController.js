@@ -195,7 +195,7 @@ export const addMonthlyExpense = async (req, res) => {
 
 export const updateMonthlyExpense = async (req, res) => {
   const { adId } = req.params; // Get both adId and expenseId
-  const { waterBill, gasBill, trashBill, garageBill, electricityBill, price } =
+  const { waterBill, gasBill, trashBill, garageBill, electricityBill, price, otherBill } =
     req.body;
 
   try {
@@ -211,6 +211,7 @@ export const updateMonthlyExpense = async (req, res) => {
     ad.trashBill = trashBill;
     ad.electricityBill = electricityBill;
     ad.garageBill = garageBill;
+    ad.otherBill = otherBill;
 
     await ad.save();
     res.json(ad);

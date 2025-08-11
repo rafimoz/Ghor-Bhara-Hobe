@@ -24,6 +24,7 @@ const adSchema = new mongoose.Schema({
       garageBill: { type: Number, default: 0 }, // <--- MUST BE PRESENT
       electricityBill: { type: Number, default: 0 },
       totalBill: { type: Number, default: 0 },
+      otherBill: { type: Number, default: 0 },
     },
   ],
 });

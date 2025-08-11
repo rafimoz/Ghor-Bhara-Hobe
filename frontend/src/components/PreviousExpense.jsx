@@ -63,7 +63,7 @@ const PreviousExpense = ({ title, records = [], electricityUnit, setSlip, langua
             {/* Downloadable slip */}
             <div
                 ref={slipRef}
-                className="w-full max-w-md mx-auto p-4 rounded shadow relative"
+                className="w-full max-w-md mx-auto p-4 rounded shadow relative overflow-hidden"
                 style={{ 
                     backgroundColor: "#ffffff",
                     color: "#000000", 

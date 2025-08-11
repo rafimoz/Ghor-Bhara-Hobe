@@ -11,6 +11,7 @@ const Dashboard = () => {
     backendURL,
     toggleRefreshAds,
     toast,
+    language,
   } = useOutletContext();
 
   const [addUnit, setAddUnit] = useState(false);
@@ -97,12 +98,17 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6 lg-py-8 sm:px-6 lg:px-8"> {/* Increased overall padding */}
         {/* "All Units" Title - Slightly larger and more defined */}
-        <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">All Units</h2>
+        <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">{language === 'en' ? 'All Units' : 'সমস্ত ইউনিট'}</h2>
         <div className="flex justify-between mb-5"> {/* Spaced out buttons */}
           {/* QR Code Button - PRESERVED ORIGINAL STYLING */}
           <button onClick={() => setSeeQrCode(true)} className="border-2 dark:border-subtitle-dark border-subtitle-light dark:text-subtitle-dark text-subtitle-light dark:hover:bg-subtitle-dark hover:bg-subtitle-light dark:hover:text-title-light hover:text-title-dark p-1.5 rounded-full px-3 cursor-pointer">QR Code</button>
           {/* Add New Unit Button - PRESERVED ORIGINAL STYLING */}
-          <button onClick={() => setAddUnit(true)} className="border-2 dark:border-subtitle-dark border-subtitle-light dark:bg-subtitle-dark bg-subtitle-light dark:text-title-light text-title-dark p-1.5 rounded-full px-3 cursor-pointer">Add New</button>
+          <button onClick={() => setAddUnit(true)} className="border-2 dark:border-subtitle-dark flex items-center justify-between gap-1 border-subtitle-light dark:bg-subtitle-dark bg-subtitle-light dark:text-title-light text-title-dark p-1.5 rounded-full px-3 cursor-pointer">
+            {language === 'en' ? 'Add' : 'যোগ করুন'}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </button>
         </div>
 
         {/* Conditional rendering for no units */}
@@ -113,7 +119,7 @@ const Dashboard = () => {
               onClick={() => setAddUnit(true)}
               className="px-6 py-3 dark:bg-subtitle-dark bg-subtitle-light dark:text-title-light text-title-dark rounded-full shadow-md hover:opacity-80 transition-opacity" // Reusing your Add New button style or similar
             >
-              Add Your First Unit
+              {language === 'en' ? 'Add Your First Unit' : 'আপনার প্রথম ইউনিট যোগ করুন'}
             </button>
           </div>
         ) : (

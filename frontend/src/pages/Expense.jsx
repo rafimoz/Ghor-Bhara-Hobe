@@ -15,7 +15,6 @@ const Expense = () => {
     const [slip, setSlip] = useState(false); // State to control the modal visibility
     const [previousSlip, setPreviousSlip] = useState(false); // State to control the modal visibility
     const [selectedMonth, setSelectedMonth] = useState("");
-    const [language, setLanguage] = useState('en'); // default to English
 
     const [defaultBills, setDefaultBills] = useState({
         waterBill: 0,
@@ -30,6 +29,8 @@ const Expense = () => {
         ads,
         toast,
         toggleRefreshAds,
+        language,
+        setLanguage,
     } = useOutletContext();
 
     const calculateTotal = () => {
@@ -61,6 +62,10 @@ const Expense = () => {
             if (expenses.electricity?.isChecked && expenses.electricity?.quantity) {
                 currentTotal += (expenses.electricity.quantity * selectedAd.electricityBill); // Assuming 9TK per unit
             }
+            // Add the new 'other' bill to the total if checked
+            if (expenses.other?.isChecked && expenses.other?.amount) {
+                currentTotal += parseFloat(expenses.other.amount) || 0;
+            }
         }
         setTotalExpense(currentTotal);
     };
@@ -84,7 +89,9 @@ const Expense = () => {
                 garbage: { isChecked: true },
                 garage: { isChecked: false },
                 gas: { isChecked: true },
-                electricity: { isChecked: true, quantity: 0 }
+                electricity: { isChecked: true, quantity: 0 },
+                // Initialize the new 'other' bill state
+                other: { isChecked: false, amount: '' }
             });
             // Set the default bills state from the selected ad
             setDefaultBills({
@@ -146,6 +153,7 @@ const Expense = () => {
         }));
     };
 
+
     const handleQuantityChange = (expenseType, quantity) => {
         setExpenses(prevExpenses => ({
             ...prevExpenses,
@@ -155,6 +163,18 @@ const Expense = () => {
             }
         }));
     };
+
+    // New handler to manage the 'other' bill's amount
+    const handleOtherBillChange = (amount) => {
+        setExpenses(prevExpenses => ({
+            ...prevExpenses,
+            other: {
+                ...prevExpenses.other,
+                amount: amount,
+            }
+        }));
+    };
+
 
     const saveMonthlyExpenses = async () => {
         if (!currUnit) {
@@ -176,6 +196,8 @@ const Expense = () => {
             trashBill: expenses.garbage?.isChecked ? (selectedAd.trashBill || 0) : 0,
             garageBill: expenses.garage?.isChecked ? (selectedAd.garageBill || 0) : 0,
             electricityBill: expenses.electricity?.isChecked ? (expenses.electricity.quantity * selectedAd.electricityBill) : 0,
+            // Include the custom 'other' bill data
+            otherBill: expenses.other?.isChecked ? parseFloat(expenses.other?.amount) || 0 : 0,
             totalBill: totalExpense
         };
 
@@ -233,11 +255,11 @@ const Expense = () => {
     return (
         <div className="min-h-screen dark:bg-bg-dark bg-bg-light">
             <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6 lg-py-8 sm:px-6 lg:px-8">
-                <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">Expenses Tracker</h2>
-                <div className="grid grid-cols-2 md:grid-cols-2 grid-rows-[0fr_2fr] md:grid-rows-[1fr_3fr] gap-2 sm:gap-4">
+                <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">{language === 'en' ? 'Expenses Tracker' : 'খরচ ট্র্যাকার'}</h2>
+                <div className="grid grid-cols-2 md:grid-cols-2 grid-rows-[0fr_2fr] md:grid-rows-[1fr_3fr] gap-4">
                     {/*Calculate Expenses*/}
                     <div className="col-start-1 gap-2 row-start-2 col-span-2 md:col-start-1 md:row-start-1 md:col-span-1 md:row-span-3 dark:bg-card-dark bg-card-light shadow-sm border-1 border-subtitle-dark/20 rounded-2xl sm:p-4 p-2 flex flex-col">
-                        <h3 className="sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">Select unit</h3>
+                        <h3 className="sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">{language === 'en' ? 'Select unit' : 'ইউনিট নির্বাচন করুন'}</h3>
                         <div className='mb-3 relative'>
                             <select
                                 className='w-full p-3 py-2 sm:text-2xl text-xl rounded-xl dark:bg-bg-dark bg-bg-light dark:text-subtitle-dark text-subtitle-light appearance-none'
@@ -277,7 +299,7 @@ const Expense = () => {
                         </div>
 
                         <div className='w-full flex justify-between'>
-                            <h3 className="sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">Expenses</h3>
+                            <h3 className="sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">{language === 'en' ? 'Expenses' : 'খরচ'}</h3>
                             <div onClick={() => setOptions(prevOptions => !prevOptions)} className='flex justify-center items-center dark:text-subtitle-dark text-subtitle-light'>
                                 <button disabled={!currUnit}>
                                     {options ? (
@@ -405,7 +427,7 @@ const Expense = () => {
 
                         <div className="relative w-full sm:p-4 p-2 flex flex-col gap-2 dark:bg-bg-dark bg-bg-light dark:text-subtitle-dark text-subtitle-light rounded-xl overflow-hidden" >
                             <div className="sm:text-xl text-lg font-medium flex items-center gap-2">
-                                <h3>{currTitle ? `${currTitle}` : "Select a unit"}</h3>
+                                <h3>{currTitle ? `${currTitle}` : `${language === 'en' ? 'Select a unit' : 'একটি ইউনিট নির্বাচন করুন'}` }</h3>
                                 {/* Select Month */}
                                 <select
                                     className={`${currTitle ? 'block' : 'hidden'} w-fit p-1 rounded-xl border dark:border-subtitle-dark/50 border-subtitle-dark/50 dark:bg-bg-dark bg-bg-light`}
@@ -433,7 +455,7 @@ const Expense = () => {
                                                 checked={expenses.unit?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('unit', e.target.checked)}
                                             />
-                                            <p>Unit (Rent)</p>
+                                            <p>{language === 'en' ? 'Unit (Rent)' : 'ইউনিট (ভাড়া)'}</p>
                                         </div>
                                         <div>
                                             <p>{selectedAdForDisplay.price || 0} TK</p>
@@ -448,7 +470,7 @@ const Expense = () => {
                                                 checked={expenses.water?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('water', e.target.checked)}
                                             />
-                                            <p>Water</p>
+                                            <p>{language === 'en' ? 'Water bill' : 'পানির বিল'}</p>
                                         </div>
                                         <div>
                                             <p>{selectedAdForDisplay.waterBill || 0} TK</p> {/* Changed to waterBill */}
@@ -463,7 +485,7 @@ const Expense = () => {
                                                 checked={expenses.garbage?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('garbage', e.target.checked)}
                                             />
-                                            <p>Trash</p>
+                                            <p>{language === 'en' ? 'Trash bill' : 'আবর্জনা বিল'}</p>
                                         </div>
                                         <div>
                                             <p>{selectedAdForDisplay.trashBill || 0} TK</p> {/* Changed to trashBill */}
@@ -478,7 +500,7 @@ const Expense = () => {
                                                 checked={expenses.garage?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('garage', e.target.checked)}
                                             />
-                                            <p>Garage</p>
+                                            <p>{language === 'en' ? 'Garage bill' : 'গ্যারেজ বিল'}</p>
                                         </div>
                                         <div>
                                             <p>{selectedAdForDisplay.garageBill || 0} TK</p> {/* Changed to garageBill */}
@@ -493,7 +515,7 @@ const Expense = () => {
                                                 checked={expenses.gas?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('gas', e.target.checked)}
                                             />
-                                            <p>Gas</p>
+                                            <p>{language === 'en' ? 'Gas bill' : 'গ্যাস বিল'}</p>
                                         </div>
                                         <div>
                                             <p>{selectedAdForDisplay.gasBill || 0} TK</p> {/* Changed to gasBill */}
@@ -508,24 +530,50 @@ const Expense = () => {
                                                 checked={expenses.electricity?.isChecked || false}
                                                 onChange={(e) => handleCheckboxChange('electricity', e.target.checked)}
                                             />
-                                            <p>Electricity</p>
+                                            <p>{language === 'en' ? 'Electricity bill' : 'বিদ্যুৎ বিল'}</p>
                                         </div>
                                         <div className='flex items-center justify-between gap-2'>
+                                            <span>{selectedAdForDisplay.electricityBill} x</span>
                                             <input
-                                                className='p-1 w-20 border text-center rounded-xl dark:border-subtitle-dark/50 border-subtitle-light/50 text-subtitle-light dark:text-subtitle-dark' // Added styles for better visibility
+                                                className='p-1 w-20 border text-center rounded-lg dark:border-subtitle-dark/50 border-subtitle-light/50 text-subtitle-light dark:text-subtitle-dark' // Added styles for better visibility
                                                 type="number"
                                                 min="0" // Prevent negative quantities
+                                                placeholder="0"
                                                 value={expenses.electricity?.quantity || ''}
                                                 onChange={(e) => handleQuantityChange('electricity', e.target.value)}
                                                 disabled={!expenses.electricity?.isChecked} // Disable if not checked
                                             />
-                                            <span>x</span>
-                                            <p>{selectedAdForDisplay.electricityBill} TK</p>
+                                            <p>TK</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Updated "Other" Bill Input Section without the name field */}
+                                    <div className='flex justify-between items-center uppercase sm:text-lg text-sm'>
+                                        <div className='flex items-center gap-2'>
+                                            <input
+                                                className='w-6 h-6 rounded-3xl appearance-none border cursor-pointer checked:bg-blue-600 checked:border-white transition-all duration-200 ease-in-out focus:outline-none focus:ring-0 focus:ring-blue-400 focus:ring-opacity-75'
+                                                type="checkbox"
+                                                checked={expenses.other?.isChecked || false}
+                                                onChange={(e) => handleCheckboxChange('other', e.target.checked)}
+                                            />
+                                            <p>{language === 'en' ? 'Other' : 'অন্যান্য'}</p>
+                                        </div>
+                                        <div className='flex items-center gap-2'>
+                                            <input
+                                                className='p-1 w-20 border text-center rounded-lg dark:border-subtitle-dark/50 border-subtitle-light/50 text-subtitle-light dark:text-subtitle-dark'
+                                                type="number"
+                                                min="0"
+                                                placeholder="0"
+                                                value={expenses.other?.amount || ''}
+                                                onChange={(e) => handleOtherBillChange(e.target.value)}
+                                                disabled={!expenses.other?.isChecked}
+                                            />
+                                            <p>TK</p>
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <p className='text-center text-red-500'>Please select a unit to view expenses.</p>
+                                <p className='text-center text-red-500'>{language === 'en' ? 'Please select a unit to view expenses.' : 'খরচ দেখতে অনুগ্রহ করে একটি ইউনিট নির্বাচন করুন।'}</p>
                             )}
                             <span className='my-2 w-full h-[1px] dark:bg-subtitle-dark/50 bg-subtitle-light/60'></span>
                             {
@@ -533,21 +581,23 @@ const Expense = () => {
                                     <div className='flex justify-between items-center uppercase sm:text-lg text-sm'>
                                         <div className='flex gap-2'>
                                             <button
-                                                onClick={() => setSlip(true)}
-                                                className='p-2 px-3 dark:bg-blue-700 bg-blue-500 dark:text-white text-white rounded-md font-semibold sm:text-lg text-sm hover:opacity-80 cursor-pointer'
+                                                onClick={() => {
+                                                    setSlip(true)
+                                                }}
+                                                className='p-2 px-3 dark:bg-blue-700 bg-blue-500 dark:text-white text-white rounded-md font-semibold sm:text-md text-sm hover:opacity-80 cursor-pointer'
                                                 disabled={!currUnit} // Disable if no unit selected
                                             >
-                                                Download Slip
+                                                {language === 'en' ? 'Download Slip' : 'স্লিপ ডাউনলোড'}
                                             </button>
                                             <button
                                                 onClick={saveMonthlyExpenses} // New Save button
-                                                className='p-2 px-3 dark:bg-green-700 bg-green-500 dark:text-white text-white rounded-md font-semibold sm:text-lg text-sm hover:opacity-80 cursor-pointer'
+                                                className='p-2 px-3 dark:bg-green-700 bg-green-500 dark:text-white text-white rounded-md font-semibold sm:text-md text-sm hover:opacity-80 cursor-pointer'
                                                 disabled={!currUnit} // Disable if no unit selected
                                             >
-                                                Save
+                                                {language === 'en' ? 'Save Record' : 'রিকোড সংরক্ষণ করুন'}
                                             </button>
                                         </div>
-                                        <p className='font-bold'>Total: {totalExpense} TK</p>
+                                        <p className='font-bold'>{language === 'en' ? 'Total' : 'মোট'}: {totalExpense} TK</p>
                                     </div>
                                 )
                             }
@@ -557,49 +607,27 @@ const Expense = () => {
                     {/*Previous Expenses*/}
                     <div className="flex flex-col justify-start col-start-1 row-start-3 col-span-2 row-span-2 md:col-start-2 md:row-start-1 md:col-span-1 md:row-span-3 dark:bg-card-dark bg-card-light shadow-sm border-1 border-subtitle-dark/20 rounded-2xl sm:p-4 p-2">
                         <div className="w-full">
-                            <h3 className="mb-2 sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">Previous Expenses</h3>
+                            <h3 className="mb-2 sm:text-3xl text-2xl font-neueplak-regular dark:text-subtitle-dark text-subtitle-light">{language === 'en' ? 'Previous Expenses' : 'পূর্ববর্তী খরচ'}</h3>
                             <div className="w-full sm:p-4 p-2 flex flex-col gap-2 dark:bg-bg-dark bg-bg-light dark:text-subtitle-dark text-subtitle-light rounded-xl">
                                 <h3 className="sm:text-xl text-lg font-medium">
-                                    {currTitle ? `Records for ${currTitle}` : "Select a unit"}
+                                    {currTitle ? `${language === 'en' ? 'Records for : ' : ''} ${currTitle} ${language === 'en' ? '' : ': জন্য রেকর্ড'}` :  `${language === 'en' ? 'Select a unit' : 'একটি ইউনিট নির্বাচন করুন'}`}
                                 </h3>
 
                                 <span className='my-2 w-full h-[1px] bg-subtitle-dark/50'></span>
 
                                 {selectedAdForDisplay && selectedAdForDisplay.monthlyExpenses && selectedAdForDisplay.monthlyExpenses.length > 0 ? (
-                                    <div className='flex flex-col gap-1 overflow-y-auto max-h-96'> {/* Added overflow-y-auto for scrollable list */}
-                                        <div className='font-semibold py-1 grid grid-cols-[3.5fr_2fr_2fr_2fr_2.5fr_2fr_3fr_3fr_1.5fr] sm:text-sm text-[10px]'>
-                                            <p>Month</p>
-                                            <p>Unit</p>
-                                            <p>Water</p>
-                                            <p>Trash</p>
-                                            <p>Garage</p>
-                                            <p>Gas</p>
-                                            <p>Elec</p>
-                                            <p>Total</p>
-                                        </div>
-                                        {selectedAdForDisplay.monthlyExpenses.map((expense) => (
-                                            <div key={expense._id || expense.month} className='bg-subtitle-dark/10 py-1 grid grid-cols-[3.5fr_2fr_2fr_2fr_2.5fr_2fr_3fr_3fr_1.5fr] items-center sm:text-sm text-[10px]'>
-                                                <p>{expense.month}</p>
-                                                <p>{selectedAdForDisplay.price}</p> {/* Unit bill is from ad.price */}
-                                                <p>{expense.waterBill}</p>
-                                                <p>{expense.trashBill}</p>
-                                                <p>{expense.garageBill}</p>
-                                                <p>{expense.gasBill}</p> {/* Changed to gasBill */}
-                                                <p>{expense.electricityBill}</p>
-                                                <p>{expense.totalBill}</p>
-                                                <button
-                                                    onClick={() => deleteMonthlyExpense(expense._id)}
-                                                    className='text-red-400 hover:text-red-600 transition-colors duration-200 flex justify-end'
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 p-1">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                    </svg>
-                                                </button>
-                                            </div>
+                                    <div className='flex flex-col gap-2 overflow-y-auto max-h-96'>
+                                        {selectedAdForDisplay.monthlyExpenses.slice().reverse().map((expense) => (
+                                            <ExpenseAccordionItem
+                                                key={expense._id || expense.month}
+                                                expense={expense}
+                                                selectedAdForDisplay={selectedAdForDisplay}
+                                                deleteMonthlyExpense={deleteMonthlyExpense}
+                                            />
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-center text-red-500">No previous monthly expenses found.</p>
+                                    <p className="text-center text-red-500">{language === 'en' ? 'No previous monthly expenses found.' : 'আগের কোনও মাসিক খরচ পাওয়া যায়নি।'}</p>
                                 )}
 
                                 <span className='my-2 w-full h-[1px] bg-subtitle-dark/50'></span>
@@ -609,10 +637,10 @@ const Expense = () => {
                                         <div className='flex gap-2 items-center uppercase sm:text-lg text-sm'>
                                             <button
                                                 onClick={() => setPreviousSlip(true)}
-                                                className='p-2 px-3 dark:bg-blue-700 bg-blue-500 dark:text-white text-white rounded-md font-semibold sm:text-lg text-sm hover:opacity-80 cursor-pointer'
-                                                disabled={!currUnit} // Disable if no unit selected
+                                                className='p-2 px-3 dark:bg-blue-700 bg-blue-500 dark:text-white text-white rounded-md font-semibold sm:text-md text-sm hover:opacity-80 cursor-pointer'
+                                                disabled={!currUnit}
                                             >
-                                                Download Slip
+                                                {language === 'en' ? 'Download Slip' : 'স্লিপ ডাউনলোড'}
                                             </button>
                                         </div>
                                     </>
@@ -636,7 +664,7 @@ const Expense = () => {
                                 const items = [];
                                 if (expenses.unit?.isChecked)
                                     items.push({
-                                        name: language === 'en' ? 'House Rent' : 'বাসা ভাড়া',
+                                        name: language === 'en' ? 'Unit Rent' : 'বাসা ভাড়া',
                                         price: selectedAdForDisplay.price || 0,
                                     });
                                 if (expenses.water?.isChecked)
@@ -646,7 +674,7 @@ const Expense = () => {
                                     });
                                 if (expenses.garbage?.isChecked)
                                     items.push({
-                                        name: language === 'en' ? 'Garbage Bill' : 'ময়লা বিল',
+                                        name: language === 'en' ? 'Trash Bill' : 'ময়লা বিল',
                                         price: selectedAdForDisplay.trashBill || 0,
                                     });
                                 if (expenses.garage?.isChecked)
@@ -663,8 +691,14 @@ const Expense = () => {
                                     items.push({
                                         name: language === 'en' ? 'Electricity Bill' : 'বিদ্যুৎ বিল',
                                         price: expenses.electricity.quantity * selectedAdForDisplay.electricityBill,
-                                        unit: `(${defaultBills.electricityBill} x ${expenses.electricity.quantity } ${language === 'en' ? 'units' : 'ইউনিট'
+                                        unit: `(${defaultBills.electricityBill} x ${expenses.electricity.quantity} ${language === 'en' ? 'units' : 'ইউনিট'
                                             })`,
+                                    });
+                                if (expenses.other?.isChecked)
+                                    items.push({
+                                        name: language === 'en' ? 'Other' : 'অন্যান্য',
+                                        // The fix is here: we get the price from the dynamic 'expenses' state
+                                        price: parseFloat(expenses.other.amount) || 0,
                                     });
 
                                 return items;
@@ -697,5 +731,82 @@ const Expense = () => {
         </div>
     )
 }
+
+const ExpenseAccordionItem = ({ expense, selectedAdForDisplay, deleteMonthlyExpense }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleOpen = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const {
+        language,
+    } = useOutletContext();
+
+
+    return (
+        <div className='dark:bg-subtitle-dark/10 bg-subtitle-light/10 p-2 rounded-md'>
+            <div className='flex justify-between items-center cursor-pointer' onClick={toggleOpen}>
+                <p className='font-semibold'>{expense.month}</p>
+                <div className="flex items-center gap-2">
+                    <p className='font-bold text-lg'>{expense.totalBill}</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`size-5 transform transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            {isOpen && (
+                <div className='mt-2 border-t dark:border-subtitle-dark/20 border-subtitle-light/20 py-1 flex flex-col gap-1 text-sm'>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Unit Rent' : 'বাসা ভাড়া'}</p>
+                        <p>{selectedAdForDisplay.price}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Water Bill' : 'পানি বিল'}</p>
+                        <p>{expense.waterBill}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Trash Bill' : 'ময়লা বিল'}</p>
+                        <p>{expense.trashBill}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Garage Bill' : 'গ্যারেজ বিল'}</p>
+                        <p>{expense.garageBill}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Gas Bill' : 'গ্যাস বিল'}</p>
+                        <p>{expense.gasBill}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Electricity Bill' : 'বিদ্যুৎ বিল'}</p>
+                        <p>{expense.electricityBill}</p>
+                    </div>
+                    <div className="flex justify-between">
+                        <p className="font-semibold">{language === 'en' ? 'Other' : 'অন্যান্য'}</p>
+                        <p>{expense.otherBill}</p>
+                    </div>
+                    <div className="flex justify-between w-full border-t py-1 dark:border-subtitle-dark/20 border-subtitle-light/20">
+                        <p className="font-bold">{language === 'en' ? 'Total:' : 'মোট:'}</p>
+                        <p className='font-bold'>{expense.totalBill}</p>
+                    </div>
+                    <button
+                        onClick={() => deleteMonthlyExpense(expense._id)}
+                        className='dark:text-red-400 text-red-600 hover:text-red-400 dark:hover:text-red-600 transition-colors duration-200 mt-2 flex items-center justify-center gap-1 font-semibold'
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                        {language === 'en' ? 'Delete Record' : 'রেকর্ড মুছুন'}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default Expense

@@ -47,7 +47,7 @@ const compressImage = (file) => {
 };
 
 const Profile = () => {
-  const { user, setUser, backendURL, toggleRefreshAds, toast } = useOutletContext();
+  const { user, setUser, backendURL, toggleRefreshAds, toast, language } = useOutletContext();
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -112,7 +112,7 @@ const Profile = () => {
   return user && (
     <div className="min-h-screen dark:bg-bg-dark bg-bg-light font-sans">
       <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6 lg-py-8 sm:px-6 lg:px-8">
-        <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">Profile</h2>
+        <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">{language === 'en' ? 'Profile' : 'প্রোফাইল'}</h2>
         <div className='relative grid sm:grid-cols-[1fr_2fr] grid-cols-1 items-center gap-4 p-4 dark:bg-card-dark/20 bg-card-light/20 rounded-4xl shadow-xl overflow-hidden'>
           <div className='w-full flex justify-center'>
             {isEdit ? (
@@ -141,28 +141,28 @@ const Profile = () => {
           </div>
           <div className='dark:bg-card-dark bg-card-light dark:text-subtitle-dark text-subtitle-light border border-title-light/10 dark:border-title-dark/10 rounded-3xl p-4 flex flex-col gap-2 w-full h-full'>
             <div className='flex items-center gap-2'>
-              <p className='font-bold'>Name:</p>
+              <p className='font-bold'>{language === 'en' ? 'Name:' : 'নাম:'}</p>
               {isEdit
                 ? <input type="text" value={form.name} onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))} className='uppercase bg-subtitle-dark/10 p-2 rounded-2xl w-full' />
                 : <p className='uppercase p-2 rounded-2xl'>{form.name}</p>}
             </div>
             <div className='flex items-center gap-2'>
-              <p className='font-bold'>Phone:</p>
+              <p className='font-bold'>{language === 'en' ? 'Phone:' : 'ফোন:'}</p>
               {isEdit
                 ? <input type="text" value={form.phone} onChange={e => setForm(prev => ({ ...prev, phone: e.target.value }))} className='uppercase bg-subtitle-dark/10 p-2 rounded-2xl w-full' />
                 : <p className='uppercase p-2 rounded-2xl'>{form.phone}</p>}
             </div>
             <div className='flex items-center gap-2'>
-              <p className='font-bold'>Email:</p>
+              <p className='font-bold'>{language === 'en' ? 'Email:' : 'ইমেইল:'}</p>
               <p className='p-2 rounded-2xl'>{form.email}</p>
             </div>
             <div className='flex justify-between items-end h-full mt-2 gap-2'>
               {isEdit
                 ? <button onClick={updateProfile} disabled={isLoading} className={`cursor-pointer p-2 w-full dark:text-title-light text-title-dark dark:hover:bg-subtitle-dark dark:bg-subtitle-dark bg-subtitle-light rounded-full px-3`}>
-                  {isLoading ? "Updating..." : "Update"}
+                  {isLoading ? "Updating..." : `${language === 'en' ? 'Update' : 'আপডেট'}`}
                 </button>
-                : <button onClick={() => setIsEdit(true)} className='p-2 w-full dark:text-title-light text-title-dark dark:hover:bg-subtitle-dark dark:bg-subtitle-dark bg-subtitle-light rounded-full px-3 cursor-pointer'>Edit</button>}
-              <button onClick={() => setIsEdit(false)} className={`${isEdit ? "block" : "hidden"} p-2 w-full bg-red-400 hover:bg-red-500 text-white rounded-full px-3 cursor-pointer`}>Cancel</button>
+                : <button onClick={() => setIsEdit(true)} className='p-2 w-full dark:text-title-light text-title-dark dark:hover:bg-subtitle-dark dark:bg-subtitle-dark bg-subtitle-light rounded-full px-3 cursor-pointer'>{language === 'en' ? 'Edit' : 'সম্পাদনা করুন'}</button>}
+              <button onClick={() => setIsEdit(false)} className={`${isEdit ? "block" : "hidden"} p-2 w-full bg-red-400 hover:bg-red-500 text-white rounded-full px-3 cursor-pointer`}>{language === 'en' ? 'Cancel' : 'বাতিল করুন'}</button>
             </div>
           </div>
           {isLoading && (

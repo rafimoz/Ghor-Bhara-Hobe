@@ -21,7 +21,7 @@ const UserPanel = () => {
   const [addUnit, setAddUnit] = useState(false);
   const [seeQrCode, setSeeQrCode] = useState(false);
 
-
+  const [language, setLanguage] = useState('en'); // default to English
   const [pageState, setPageState] = useState("Dashboard")
   const location = useLocation(); // Add this line
 
@@ -157,6 +157,12 @@ const UserPanel = () => {
               }} className="dark:bg-subtitle-dark bg-subtitle-light dark:text-bg-dark text-bg-light dark:hover:bg-title-dark hover:bg-title-light dark:hover:text-title-light hover:text-title-dark p-1.5 rounded px-3 cursor-pointer">
                 Logout
               </button>
+              <h1
+                onClick={() => setLanguage(prev => prev === 'en' ? 'bn' : 'en')}
+                className="dark:text-title-dark text-title-light cursor-pointer"
+              >
+                {language === 'en' ? 'English' : 'বাংলা'}/{language === 'en' ? 'বাংলা' : 'English'}
+              </h1>
             </div>
 
             {/* Mobile Burger Menu Button */}
@@ -228,6 +234,12 @@ const UserPanel = () => {
             >
               Profile
             </NavLink>
+            <h1
+                onClick={() => setLanguage(prev => prev === 'en' ? 'bn' : 'en')}
+                className="block px-3 py-2 text-base font-medium dark:text-subtitle-dark text-subtitle-light cursor-pointer"
+              >
+                {language === 'en' ? 'English' : 'বাংলা'}/{language === 'en' ? 'বাংলা' : 'English'}
+              </h1>
             <button onClick={() => {
               localStorage.removeItem("authToken");
               localStorage.removeItem("userId");
@@ -258,7 +270,7 @@ const UserPanel = () => {
       {
         pageState === "Dashboard" && (
           <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6 lg-py-8 sm:px-6 lg:px-8">
-            <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">Dashboard</h2>
+            <h2 className="text-4xl sm:text-5xl font-neueplak-black sm:mb-5 mt-18 mb-8 dark:text-title-dark text-title-light">{language === 'en' ? 'Dashboard' : 'ড্যাশবোর্ড'}</h2>
             <div class="grid grid-cols-2 md:grid-cols-2 grid-rows-[0fr_2fr] md:grid-rows-[1fr_3fr] gap-2 sm:gap-4">
               {/*Numbers*/}
               <div class="col-start-1 row-start-1 col-span-2 md:col-start-1 md:row-start-1 md:col-span-1 md:row-span-1 dark:bg-card-dark bg-card-light shadow-sm border-1 border-subtitle-dark/20 rounded-2xl sm:p-4 p-2">
@@ -280,7 +292,7 @@ const UserPanel = () => {
 
               {/*Quick Access*/}
               <div class="col-start-1 row-start-2 col-span-2 md:col-start-1 md:row-start-2 md:col-span-1 md:row-span-3 dark:bg-card-dark bg-card-light shadow-sm border-1 border-subtitle-dark/20 rounded-2xl sm:p-4 p-2 flex flex-col">
-                <h3 className="mb-4 sm:text-4xl text-3xl font-neueplak-regular dark:text-title-dark text-title-light">Quick Access</h3>
+                <h3 className="mb-4 sm:text-4xl text-3xl font-neueplak-regular dark:text-title-dark text-title-light">{language === 'en' ? 'Quick Access' : 'দ্রুত অ্যাক্সেস'}</h3>
                 <div className="w-full grid grid-cols-2 grid-rows-2 gap-2 sm:gap-4 flex-grow">
                   <div onClick={() => { navigate(`/user/${ownerId}/expense`) }} className="w-full h-full flex justify-center items-center gap-1 py-10 bg-gradient-to-br hover:bg-gradient-to-b from-blue-400/20 to-blue-600/20 dark:from-blue-600/20 dark:to-blue-800/20 dark:text-subtitle-dark text-subtitle-light rounded-2xl shadow-sm cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
@@ -315,7 +327,7 @@ const UserPanel = () => {
               {/*Active Units*/}
               <div class="flex flex-col justify-between items-center gap-2 col-start-1 row-start-3 col-span-2 row-span-2 md:col-start-2 md:row-start-1 md:col-span-1 md:row-span-4 dark:bg-card-dark bg-card-light shadow-sm border-1 border-subtitle-dark/20 rounded-2xl sm:p-4 p-2">
                 <div className="w-full">
-                  <h3 className="mb-4 sm:text-4xl text-3xl font-neueplak-regular dark:text-title-dark text-title-light">Active Units</h3>
+                  <h3 className="mb-4 sm:text-4xl text-3xl font-neueplak-regular dark:text-title-dark text-title-light">{language === 'en' ? 'Active Units' : 'চলমান ইউনিট'}</h3>
                   <div className="flex flex-col gap-2">
                     {ads
                       .filter((ad) => ad.availability) // First, filter the ads that are available
@@ -372,7 +384,7 @@ const UserPanel = () => {
         )
       }
 
-      <Outlet context={{ user, setUser, ads, qrCode, backendURL, toggleRefreshAds, toast }} />
+      <Outlet context={{ user, setUser, ads, qrCode, backendURL, toggleRefreshAds, toast, language, setLanguage }} />
     </div>
   );
 };

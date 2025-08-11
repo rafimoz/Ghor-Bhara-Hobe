@@ -12,7 +12,6 @@ const ExpenseSlip = ({ title, month, items, total, setSlip, language, setLanguag
             toast.error("Slip not ready.");
             return;
         }
-
         try {
             await document.fonts.ready;
             await new Promise(res => setTimeout(res, 100)); // small wait to ensure rendering
