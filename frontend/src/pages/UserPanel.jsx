@@ -161,7 +161,7 @@ const UserPanel = () => {
                 onClick={() => setLanguage(prev => prev === 'en' ? 'bn' : 'en')}
                 className="dark:text-title-dark text-title-light cursor-pointer"
               >
-                {language === 'en' ? 'English' : 'বাংলা'}/{language === 'en' ? 'বাংলা' : 'English'}
+                {language === 'en' ? 'En' : 'বাং'}/{language === 'en' ? 'বাং' : 'EnS'}
               </h1>
             </div>
 
@@ -235,11 +235,11 @@ const UserPanel = () => {
               Profile
             </NavLink>
             <h1
-                onClick={() => setLanguage(prev => prev === 'en' ? 'bn' : 'en')}
-                className="block px-3 py-2 text-base font-medium dark:text-subtitle-dark text-subtitle-light cursor-pointer"
-              >
-                {language === 'en' ? 'English' : 'বাংলা'}/{language === 'en' ? 'বাংলা' : 'English'}
-              </h1>
+              onClick={() => setLanguage(prev => prev === 'en' ? 'bn' : 'en')}
+              className="block px-3 py-2 text-base font-medium dark:text-subtitle-dark text-subtitle-light cursor-pointer"
+            >
+              {language === 'en' ? 'En' : 'বাং'}/{language === 'en' ? 'বাং' : 'EnS'}
+            </h1>
             <button onClick={() => {
               localStorage.removeItem("authToken");
               localStorage.removeItem("userId");
