@@ -123,7 +123,7 @@ const HomePage = () => {
                             <a href="#how-it-works" className="dark:text-subtitle-dark text-subtitle-light hover:dark:text-subtitle-dark/60 hover:text-subtitle-light/60 transition-colors">How It Works</a>
                             <a href="#features" className="dark:text-subtitle-dark text-subtitle-light hover:dark:text-subtitle-dark/60 hover:text-subtitle-light/60 transition-colors">Features</a>
                             <a href="#about" className="dark:text-subtitle-dark text-subtitle-light hover:dark:text-subtitle-dark/60 hover:text-subtitle-light/60 transition-colors">About</a>
-                            <a href="#getstarted" className="dark:bg-subtitle-dark bg-subtitle-light text-white px-6 py-2 rounded-lg hover:dark:bg-subtitle-dark/60 hover:bg-subtitle-light/60 transition-colors">
+                            <a href="#getstarted" className="dark:bg-title-dark/90 bg-title-light/90 dark:hover:bg-title-dark/70 hover:bg-title-light/70 dark:text-title-light text-title-dark px-6 py-2 rounded-lg transition-colors">
                                 Get Started
                             </a>
                         </div>
@@ -171,7 +171,7 @@ const HomePage = () => {
                             className="block py-2 text-base font-medium
                  dark:text-gray-300 dark:hover:text-white
                  text-gray-700 hover:text-blue-600
-                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300
+                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-description-dark after:transition-all after:duration-300
                  hover:after:w-full"
                             onClick={() => setIsOpen(false)}
                         >
@@ -182,7 +182,7 @@ const HomePage = () => {
                             className="block py-2 text-base font-medium
                  dark:text-gray-300 dark:hover:text-white
                  text-gray-700 hover:text-blue-600
-                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300
+                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-description-dark after:transition-all after:duration-300
                  hover:after:w-full"
                             onClick={() => setIsOpen(false)}
                         >
@@ -193,7 +193,7 @@ const HomePage = () => {
                             className="block py-2 text-base font-medium
                  dark:text-gray-300 dark:hover:text-white
                  text-gray-700 hover:text-blue-600
-                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300
+                 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-description-dark after:transition-all after:duration-300
                  hover:after:w-full"
                             onClick={() => setIsOpen(false)}
                         >
@@ -202,9 +202,9 @@ const HomePage = () => {
                         <a
                             href='#getstarted'
                             className="block w-full py-2 px-4 rounded-md
-                 bg-gradient-to-r from-blue-500 to-purple-600
-                 text-white text-lg font-semibold text-center
-                 shadow-lg hover:from-blue-600 hover:to-purple-700
+                 dark:bg-title-dark/90 bg-title-light/90 dark:hover:bg-title-dark/70 hover:bg-title-light/70
+                 dark:text-title-light text-title-dark text-lg font-semibold text-center
+                 shadow-lg
                  transform transition-all duration-300 ease-in-out"
                             onClick={() => setIsOpen(false)}
                         >
@@ -246,7 +246,8 @@ const HomePage = () => {
                     <div className="mt-5 flex flex-col sm:flex-row sm:justify-start justify-center gap-4 animate-fade-in-up delay-400">
                         <button
                             onClick={() => navigate("/register")}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 uppercase py-3 rounded-full sm:text-lg text-md font-semibold shadow-lg
+                            className="dark:bg-title-dark/90 bg-title-light/90 dark:hover:bg-title-dark/70 hover:bg-title-light/70
+                 dark:text-title-light text-title-dark px-6 uppercase py-3 rounded-full sm:text-lg text-md font-semibold shadow-lg
                                    transform hover:scale-105 transition-all duration-300 ease-in-out flex items-center justify-center gap-2
                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
                         >
@@ -458,6 +459,9 @@ const HomePage = () => {
             <section id="about" className="py-20">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="md:text-4xl text-2xl font-neueplak-black dark:text-title-dark text-title-light mb-8">About Basha Bhara Hobe</h2>
+                    <div className='mb-16 w-full h-100 rounded-3xl overflow-hidden'>
+                        <iframe src='https://my.spline.design/dynamiciphonemockup-zUuloiTDcLiHK2pjZ8n69WKT/' frameborder='0' width='100%' height='100%'></iframe>
+                    </div>
                     <div className="space-y-6 text-lg dark:text-subtitle-dark text-subtitle-light font-neueplak-regular leading-relaxed">
                         <p>
                             For House Owners: Take control of your listings! Easily post available apartment units, upload photos of each room, set prices, and manage availability from your personal dashboard. We'll automatically generate a unique QR code for your listing, which you can display outside your building for instant access.
